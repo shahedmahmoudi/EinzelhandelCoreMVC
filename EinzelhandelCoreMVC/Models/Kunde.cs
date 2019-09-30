@@ -34,8 +34,16 @@ namespace EinzelhandelCoreMVC.Models
 
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string Email { get; set; }
+        public Gender Geschlecht { get; set; }
+    
 
-        public ICollection<Bon> Bon { get; set; }
+    public enum Gender
+    {
+        männlich,
+        Weiblich
+    }
+
+    public ICollection<Bon> Bon { get; set; }
 
         [NotMapped]
         public string FullName
