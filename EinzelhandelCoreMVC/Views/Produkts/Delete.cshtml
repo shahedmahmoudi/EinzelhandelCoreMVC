@@ -1,4 +1,4 @@
-﻿@model EinzelhandelCoreMVC.Models.Produkt
+﻿@model EinzelhandelCoreMVC.ModelView.ProduktDetail
 
 @{
     ViewData["Title"] = "Delete";
@@ -22,6 +22,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Zahl)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model=>model.ProduktartTitel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model=>model.ProduktartTitel)
         </dd>
     </dl>
     

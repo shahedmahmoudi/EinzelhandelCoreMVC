@@ -35,6 +35,8 @@ namespace EinzelhandelCoreMVC.Controllers
 
             var produktart = await _context.Produktart
                 .FirstOrDefaultAsync(m => m.ID == id);
+
+
             if (produktart == null)
             {
                 return NotFound();

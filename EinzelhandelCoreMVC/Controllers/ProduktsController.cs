@@ -23,8 +23,18 @@ namespace EinzelhandelCoreMVC.Controllers
         // GET: Produkts
         public async Task<IActionResult> Index()
         {
-            List<Produktart> PP = _context.Produktart.ToList();
-            return View(await _context.Produkt.ToListAsync());
+            var repo = new ProduktartRepository(_context);
+            
+
+
+
+            var myTask = Task.Run(() => repo.GetProduktList());
+            // your thread is free to do other useful stuff right nw
+            
+            // after a while you need the result, await for myTask:
+            List<ProduktDetail> result = await myTask;
+ 
+            return View(  result);
         }
 
         // GET: Produkts/Details/5
@@ -35,23 +45,34 @@ namespace EinzelhandelCoreMVC.Controllers
                 return NotFound();
             }
 
-            var produkt = await _context.Produkt
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var produkt = await _context.Produkt.FindAsync(id);
+            var pr = new ProduktartRepository(_context);
+            var produktDetail = new ProduktDetail()
+            {
+                Produktarts = pr.Getproduktart(),
+                ID =produkt.ID,
+                Titel=produkt.Titel,
+                Zahl=produkt.Zahl,
+                ProduktartID = produkt.Produktart.ID ,
+                ProduktartTitel = produkt.Produktart.Titel
+        };
+           
+
             if (produkt == null)
             {
                 return NotFound();
             }
 
-            return View(produkt);
+            return View(produktDetail);
         }
 
         // GET: Produkts/Create
         public IActionResult Create()
         {
-            var Pd = new ProduktDetail();
+            var produktDet = new ProduktDetail();
             var pr = new ProduktartRepository(_context);
-            Pd.Produktarts = pr.Getproduktart();
-            return View(Pd);
+            produktDet.Produktarts = pr.Getproduktart();
+            return View(produktDet);
         }
 
         // POST: Produkts/Create
@@ -59,15 +80,24 @@ namespace EinzelhandelCoreMVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Titel,Zahl")] Produkt produkt)
+        public async Task<IActionResult> Create([Bind("ID,Titel,Zahl,ProduktartID")] ProduktDetail produktDetail)
         {
+          
             if (ModelState.IsValid)
             {
+
+                var produkt = new Produkt()
+                {
+                     
+                    Titel=produktDetail.Titel,
+                    Zahl=produktDetail.Zahl
+                };
+                produkt.Produktart = _context.Produktart.Find(produktDetail.ProduktartID);
                 _context.Add(produkt);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(produkt);
+            throw new ApplicationException("Invalid model");
         }
 
         // GET: Produkts/Edit/5
@@ -76,14 +106,25 @@ namespace EinzelhandelCoreMVC.Controllers
             if (id == null)
             {
                 return NotFound();
-            }
+            }       
 
             var produkt = await _context.Produkt.FindAsync(id);
+            var pr = new ProduktartRepository(_context);
+            var produktDet = new ProduktDetail()
+            {
+                Produktarts = pr.Getproduktart(),
+                ID = produkt.ID,
+                Titel = produkt.Titel,
+                Zahl = produkt.Zahl,
+                ProduktartID = produkt.Produktart.ID
+            };
+            
+            
             if (produkt == null)
             {
                 return NotFound();
             }
-            return View(produkt);
+            return View(produktDet);
         }
 
         // POST: Produkts/Edit/5
@@ -91,9 +132,9 @@ namespace EinzelhandelCoreMVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Titel,Zahl")] Produkt produkt)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Titel,Zahl,ProduktartID")] ProduktDetail produktDetail)
         {
-            if (id != produkt.ID)
+            if (id != produktDetail.ID)
             {
                 return NotFound();
             }
@@ -102,12 +143,20 @@ namespace EinzelhandelCoreMVC.Controllers
             {
                 try
                 {
+                    var produkt = new Produkt()
+                    {
+                        ID=produktDetail.ID,
+                        Titel=produktDetail.Titel,
+                        Zahl=produktDetail.Zahl
+                    };
+                    produkt.Produktart = _context.Produktart.Find(produktDetail.ProduktartID);
+
                     _context.Update(produkt);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProduktExists(produkt.ID))
+                    if (!ProduktExists(produktDetail.ID))
                     {
                         return NotFound();
                     }
@@ -118,7 +167,7 @@ namespace EinzelhandelCoreMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(produkt);
+            return View(produktDetail);
         }
 
         // GET: Produkts/Delete/5
@@ -131,12 +180,23 @@ namespace EinzelhandelCoreMVC.Controllers
 
             var produkt = await _context.Produkt
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (produkt == null)
+            var pr = new ProduktartRepository(_context);
+            var produktDetail = new ProduktDetail()
+            {
+                Produktarts = pr.Getproduktart(),
+                ID = produkt.ID,
+                Titel = produkt.Titel,
+                Zahl = produkt.Zahl,
+                ProduktartID = produkt.Produktart.ID,
+                ProduktartTitel = produkt.Produktart.Titel
+            };
+
+            if (produktDetail == null)
             {
                 return NotFound();
             }
 
-            return View(produkt);
+            return View(produktDetail);
         }
 
         // POST: Produkts/Delete/5

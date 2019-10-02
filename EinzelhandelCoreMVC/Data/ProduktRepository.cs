@@ -18,7 +18,6 @@ namespace EinzelhandelCoreMVC.Data
         }
         public IEnumerable<SelectListItem> Getproduktart()
         {
-
             List < Produktart > PP= _context.Produktart.ToList();
                 List<SelectListItem> produktart = _context.Produktart.AsNoTracking()
                     .OrderBy(n => n.Titel)
@@ -31,11 +30,41 @@ namespace EinzelhandelCoreMVC.Data
                 var Produktarttip = new SelectListItem()
                 {
                     Value = null,
-                    Text = "--- select country ---"
+                    Text = "Wählen Sie den Produktart"
                 };
                 produktart.Insert(0, Produktarttip);
-                return new SelectList(produktart, "Value", "Text");
-           
+                return new SelectList(produktart, "Value", "Text");           
+        }
+
+        internal List<ProduktDetail> GetProduktList()
+        {
+            List<Produkt> produkts = new List<Produkt>();
+            produkts = _context.Produkt.AsNoTracking()
+                .Include(x => x.Produktart)
+                .ToList();
+            if (produkts != null)
+            {
+                List<ProduktDetail> produktsDetail = new List<ProduktDetail>();
+                foreach (var item in produkts)
+                {
+                    var pDetail = new ProduktDetail()
+                    {
+                        ID = item.ID,
+                        ProduktartTitel = item.Produktart.Titel,
+                        Titel = item.Titel,
+                        Zahl = item.Zahl
+                    };
+                    produktsDetail.Add(pDetail);
+                }
+                return produktsDetail;
+            }
+            return null;
+        }
+
+        internal int GetproduktartByPID(int? pid)
+        {
+            var produkt = _context.Produkt.Find(pid);
+            return produkt.Produktart.ID;
         }
     }
 }
