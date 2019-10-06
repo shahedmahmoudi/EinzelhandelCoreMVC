@@ -214,5 +214,9 @@ namespace EinzelhandelCoreMVC.Controllers
         {
             return _context.Produkt.Any(e => e.ID == id);
         }
+        public ActionResult GetAllEmployeeData()
+        {
+            return View(_context.Produkt.ToList()) ;
+        }
     }
 }
