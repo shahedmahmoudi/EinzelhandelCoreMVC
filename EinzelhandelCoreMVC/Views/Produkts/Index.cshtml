@@ -28,13 +28,8 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-
-<p>
-    @Html.ActionLink("All Employee Data", "GetAllEmployeeData")
-</p>
-<a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="GetAllEmployeeData">GetAllEmployeeData11</a>
 <div class="col-md-1">
-    <select id="ddlFilterColumns" class="form-control input-sm">
+    <select id="ddlFilterColumns"  class="form-control input-sm">
         <option value="">All Columns</option>
         <option value="0">ID</option>
         <option value="1">Zahl Name</option>
@@ -79,12 +74,11 @@
     </table>
 </div>
 
-@*@section scripts {
-        <script src="@Url.Content("~/js/jquery.filtertable.min.js")" type="text/javascript"></script>
-        <script type="text/javascript">
+@section scripts {
+         <script type="text/javascript">
             $(document).ready(function () {
 
-                $('#EmployeeList').filterTable({ ignoreClass: 'no-filter' });
+                $('#EmployeeList').filterTable({ ignoreClass: 'no-filter' ,minRows:2});
                 $('#ddlFilterColumns').change(function () {
                     var index = $(this).val();
                     alert(index);
@@ -99,10 +93,10 @@
                 });
             });
         </script>
-    }*@
+    }
 
 
-@section scripts {
+@*@section scripts {
 
 
 
@@ -110,10 +104,10 @@
 
         $(document).ready(function () {
            
-            //$('#EmployeeList').filterTable();
+            $('#EmployeeList').filterTable({minRows:2});
 
         });
 
     </script>
 
-}
+}*@

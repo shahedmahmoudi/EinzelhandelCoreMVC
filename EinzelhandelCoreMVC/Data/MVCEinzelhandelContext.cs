@@ -15,6 +15,7 @@ namespace EinzelhandelCoreMVC.Data
         }
         public DbSet<Produktart> Produktart { get; set; }
         public DbSet<Produkt> Produkt { get; set; }
+        public DbSet<EinzelhandelCoreMVC.Models.Kunde> Kunde { get; set; }
 
     }
 }

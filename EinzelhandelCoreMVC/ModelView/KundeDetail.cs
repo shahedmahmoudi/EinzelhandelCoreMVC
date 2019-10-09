@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EinzelhandelCoreMVC.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using static EinzelhandelCoreMVC.Models.Gender;
 
-namespace EinzelhandelCoreMVC.Models
+namespace EinzelhandelCoreMVC.ModelView
 {
-    public class Kunde
+    public class KundeDetail
     {
-        [Key]
-        [HiddenInput(DisplayValue = false)]
+       
+
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Titel ist erforderlich")]
@@ -35,8 +35,23 @@ namespace EinzelhandelCoreMVC.Models
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string Email { get; set; }
         public Gender Geschlecht { get; set; }
-        public ICollection<Bon> Bon { get; set; }
+        public List<SelectListItem> Geschlechts { get; set; }
+        
+        public KundeDetail( )
+        {
+            Geschlechts = new List<SelectListItem>();
 
+
+            Geschlechts.Add(new SelectListItem { Value = ((int)Gender.Weiblich).ToString(), Text = Gender.Weiblich.ToString() });
+            Geschlechts.Add(new SelectListItem { Value = ((int)Gender.männlich).ToString(), Text = Gender.männlich.ToString() });
+
+
+           
+        }
+
+        public string FullName
+        {
+            get;set;
+        }
     }
-                
 }
