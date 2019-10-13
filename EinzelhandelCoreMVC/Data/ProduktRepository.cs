@@ -16,7 +16,7 @@ namespace EinzelhandelCoreMVC.Data
         {
             _context = context;
         }
-        public IEnumerable<SelectListItem> Getproduktart()
+        public IEnumerable<SelectListItem> GetproduktartSelectList()
         {
             List < Produktart > PP= _context.Produktart.ToList();
                 List<SelectListItem> produktart = _context.Produktart.AsNoTracking()

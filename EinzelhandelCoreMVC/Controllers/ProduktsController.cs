@@ -23,17 +23,9 @@ namespace EinzelhandelCoreMVC.Controllers
         // GET: Produkts
         public async Task<IActionResult> Index()
         {
-            var repo = new ProduktartRepository(_context);
-            
-
-
-
-            var myTask = Task.Run(() => repo.GetProduktList());
-            // your thread is free to do other useful stuff right nw
-            
-            // after a while you need the result, await for myTask:
-            List<ProduktDetail> result = await myTask;
- 
+            var repo = new ProduktartRepository(_context);        
+            var myTask = Task.Run(() => repo.GetProduktList());   
+            List<ProduktDetail> result = await myTask; 
             return View(  result);
         }
 
@@ -49,7 +41,7 @@ namespace EinzelhandelCoreMVC.Controllers
             var pr = new ProduktartRepository(_context);
             var produktDetail = new ProduktDetail()
             {
-                Produktarts = pr.Getproduktart(),
+                Produktarts = pr.GetproduktartSelectList(),
                 ID =produkt.ID,
                 Titel=produkt.Titel,
                 Zahl=produkt.Zahl,
@@ -71,7 +63,7 @@ namespace EinzelhandelCoreMVC.Controllers
         {
             var produktDet = new ProduktDetail();
             var pr = new ProduktartRepository(_context);
-            produktDet.Produktarts = pr.Getproduktart();
+            produktDet.Produktarts = pr.GetproduktartSelectList();
             return View(produktDet);
         }
 
@@ -105,14 +97,13 @@ namespace EinzelhandelCoreMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
             }       
 
             var produkt = await _context.Produkt.FindAsync(id);
             var pr = new ProduktartRepository(_context);
             var produktDet = new ProduktDetail()
             {
-                Produktarts = pr.Getproduktart(),
+                Produktarts = pr.GetproduktartSelectList(),
                 ID = produkt.ID,
                 Titel = produkt.Titel,
                 Zahl = produkt.Zahl,
@@ -183,7 +174,7 @@ namespace EinzelhandelCoreMVC.Controllers
             var pr = new ProduktartRepository(_context);
             var produktDetail = new ProduktDetail()
             {
-                Produktarts = pr.Getproduktart(),
+                Produktarts = pr.GetproduktartSelectList(),
                 ID = produkt.ID,
                 Titel = produkt.Titel,
                 Zahl = produkt.Zahl,

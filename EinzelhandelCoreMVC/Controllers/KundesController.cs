@@ -23,13 +23,7 @@ namespace EinzelhandelCoreMVC.Controllers
         // GET: Kundes
         public async Task<IActionResult> Index()
         {
-
-
-
             var repo = new KundeRepository(_context);
-
-
-
 
             var myTask = Task.Run(() => repo.GetKundeList());
             // your thread is free to do other useful stuff right nw

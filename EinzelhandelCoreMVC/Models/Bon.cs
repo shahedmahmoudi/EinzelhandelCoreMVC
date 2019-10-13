@@ -23,5 +23,6 @@ namespace EinzelhandelCoreMVC.Models
         public virtual Kunde Kunde { get; set; }
 
 
+
     }
 }
