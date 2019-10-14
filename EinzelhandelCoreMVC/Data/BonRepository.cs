@@ -32,7 +32,10 @@ namespace EinzelhandelCoreMVC.Data
                     {
                         ID = item.ID,
                         KundeTitel = item.Kunde.Vorname+" "+ item.Kunde.Nachname,
-                        Datum = item.Datum
+                        Datum = item.Datum,
+                        Art=item.Art
+                        
+                        
                         
                     };
                     bonDetail.Add(bDetail);

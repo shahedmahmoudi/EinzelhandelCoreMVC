@@ -24,5 +24,16 @@ namespace EinzelhandelCoreMVC.ModelView
 
         public int? KundeID { get; set; }
         public string KundeTitel { get; set; }
+
+        [DisplayName("Rechnungsart")]
+        public string ArtBon
+        {
+            get
+            {
+               return Art ? "Ankauf" : "Verkauf";                
+            }
+            set
+            { }
+        }
     }
 }
