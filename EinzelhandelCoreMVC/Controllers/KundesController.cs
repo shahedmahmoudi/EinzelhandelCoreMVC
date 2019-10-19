@@ -26,9 +26,6 @@ namespace EinzelhandelCoreMVC.Controllers
             var repo = new KundeRepository(_context);
 
             var myTask = Task.Run(() => repo.GetKundeList());
-            // your thread is free to do other useful stuff right nw
-
-            // after a while you need the result, await for myTask:
             List<KundeDetail> result = await myTask;
 
             return View(result);

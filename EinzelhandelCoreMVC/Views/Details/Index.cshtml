@@ -1,0 +1,57 @@
+﻿@model IEnumerable<EinzelhandelCoreMVC.ModelView.DetailDetail>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+           FullName
+        </dt>
+        <dd>
+        
+
+        </dd>
+</div>
+<p>
+    <a asp-action="Create" asp-route-id="@Model.First().BonID">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Zahl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Preis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ermäßigung)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Zahl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Preis)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ermäßigung)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

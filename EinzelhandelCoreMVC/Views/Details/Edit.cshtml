@@ -1,0 +1,45 @@
+﻿@model EinzelhandelCoreMVC.ModelView.DetailDetail
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Detail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="BonID" />
+            <div class="form-group">
+                <label asp-for="Zahl" class="control-label"></label>
+                <input asp-for="Zahl" class="form-control" />
+                <span asp-validation-for="Zahl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Preis" class="control-label"></label>
+                <input asp-for="Preis" class="form-control" />
+                <span asp-validation-for="Preis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ermäßigung" class="control-label"></label>
+                <input asp-for="Ermäßigung" class="form-control" />
+                <span asp-validation-for="Ermäßigung" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-id="@Model.BonID">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,18 +41,17 @@ namespace EinzelhandelCoreMVC.ModelView
         public KundeDetail( )
         {
             Geschlechts = new List<SelectListItem>();
-
-
             Geschlechts.Add(new SelectListItem { Value = ((int)Gender.Weiblich).ToString(), Text = Gender.Weiblich.ToString() });
-            Geschlechts.Add(new SelectListItem { Value = ((int)Gender.männlich).ToString(), Text = Gender.männlich.ToString() });
-
-
-           
+            Geschlechts.Add(new SelectListItem { Value = ((int)Gender.männlich).ToString(), Text = Gender.männlich.ToString() });           
         }
-
+        [DisplayName("KundeName")]
         public string FullName
         {
-            get;set;
+            get
+            {
+                return Vorname + " " + Nachname;
+            }
+            set { }
         }
     }
 }

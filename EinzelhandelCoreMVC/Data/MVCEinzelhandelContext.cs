@@ -17,6 +17,7 @@ namespace EinzelhandelCoreMVC.Data
         public DbSet<Produkt> Produkt { get; set; }
         public DbSet<EinzelhandelCoreMVC.Models.Kunde> Kunde { get; set; }
         public DbSet<EinzelhandelCoreMVC.Models.Bon> Bon { get; set; }
+        public DbSet<EinzelhandelCoreMVC.Models.Detail> Detail { get; set; }
 
     }
 }

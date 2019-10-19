@@ -30,10 +30,11 @@ namespace EinzelhandelCoreMVC.Data
                     {
                         ID = item.ID,
                          Adresse= item.Adresse,
-                        Email = item.Email,
-                        FullName = item.Vorname+" "+item.Nachname,
+                        Email = item.Email,                      
                         Rufnummer=item.Rufnummer,
-                        Geschlecht=item.Geschlecht
+                        Geschlecht=item.Geschlecht,
+                        Vorname=item.Vorname,
+                        Nachname=item.Nachname
                     };
                     kundesDetail.Add(kDetail);
                 }
