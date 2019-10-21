@@ -34,6 +34,6 @@ namespace EinzelhandelCoreMVC.ModelView
             }
             set
             { }
-        }
+        }        
     }
 }

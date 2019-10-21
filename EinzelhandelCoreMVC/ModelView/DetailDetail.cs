@@ -42,5 +42,10 @@ namespace EinzelhandelCoreMVC.ModelView
         public string ProduktTitel { get; set; }
         public IEnumerable<SelectListItem> Produkts { get; set; }
 
+
+        public int ProduktartID { get; set; }
+        public string ProduktartTitel { get; set; }
+        public IEnumerable<SelectListItem> Produktarts { get; set; }
+
     }
 }

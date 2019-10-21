@@ -20,10 +20,26 @@ namespace EinzelhandelCoreMVC.Controllers
             _context = context;
         }
 
-        public int BonID1;
+
+
+
+       
+       
+         [HttpGet]
+        public ActionResult GetProdukts(int id)
+        {
+            if (!string.IsNullOrWhiteSpace(id.ToString())  )
+            {
+                var repo = new ProduktartRepository(_context);
+
+                IEnumerable<SelectListItem> produkts = repo.GetProdukts(id);
+                return Json(produkts);
+            }
+            return null;
+        }
         public async Task<IActionResult> Index(int id)
         {
-            BonID1 = id;
+           
             var repo = new BonRepository(_context);
             var myTask = Task.Run(() => repo.GetBonDetailList(id));
             List<DetailDetail> result = await myTask;
@@ -39,14 +55,23 @@ namespace EinzelhandelCoreMVC.Controllers
                 return NotFound();
             }
 
-            var detail = await _context.Detail
+            var detail = await _context.Detail.Include(x => x.Bon)
                 .FirstOrDefaultAsync(m => m.ID == id);
+            DetailDetail dd = new DetailDetail()
+            {
+                BonID = detail.Bon.ID,
+                ID = detail.ID,
+                Zahl = detail.Zahl,
+                Datum = detail.Bon.Datum,
+                Ermäßigung = detail.Ermäßigung,
+                Preis = detail.Preis
+            };
+
             if (detail == null)
             {
                 return NotFound();
             }
-
-            return View(detail);
+            return View(dd);
         }
 
         // GET: Details/Create
@@ -54,11 +79,10 @@ namespace EinzelhandelCoreMVC.Controllers
         {
               var DetDet = new DetailDetail();
             var bonRep = new BonRepository(_context);
-            DetDet.Produkts = bonRep.GetproduktSelectList();
-            DetDet.BonID = id;
-
-           
-            
+            var proRep = new ProduktartRepository(_context);
+            DetDet.Produktarts = proRep.GetproduktartSelectList();
+            DetDet.Produkts = proRep.GetProdukts();
+            DetDet.BonID = id;                      
             return View(DetDet);
         }
 
@@ -71,6 +95,7 @@ namespace EinzelhandelCoreMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                ProduktartRepository produkt = new ProduktartRepository(_context);
                 Produkt p = _context.Produkt.Find(detail.ProduktID);
                 Bon b = _context.Bon.Find(detail.BonID);
                 Detail Det = new Detail()
@@ -81,8 +106,13 @@ namespace EinzelhandelCoreMVC.Controllers
                     Produkt=p,
                     Ermäßigung=detail.Ermäßigung
                 };
+                 
                 _context.Add(Det);
                 await _context.SaveChangesAsync();
+                if (b.Art)
+                    produkt.AddCount(p, detail.Zahl);
+                else
+                    produkt.MinusCount(p, detail.Zahl);
                 return RedirectToAction("Index",new { id= detail.BonID });
             }
             return View(detail);
@@ -96,23 +126,30 @@ namespace EinzelhandelCoreMVC.Controllers
                 return NotFound();
             }
 
+
+
+            var bonRep = new BonRepository(_context);
+            var proRep = new ProduktartRepository(_context);
+           
+
             var detail = await _context.Detail.Include(x => x.Bon)
                 .Include(x => x.Bon.Kunde)
                 .Include(x => x.Produkt)
                 .FirstOrDefaultAsync(i => i.ID == id);
             var detailDetail = new DetailDetail()
             {
-                BonID=detail.Bon.ID,
-                 Datum=detail.Bon.Datum,
-                 Ermäßigung=detail.Ermäßigung,
-                 KundeVorname=detail.Bon.Kunde.Vorname,
-                 KundeNachname=detail.Bon.Kunde.Nachname,
-                 Preis=detail.Preis,
-                 ProduktID=detail.Produkt.ID,
-                 ProduktTitel=detail.Produkt.Titel,
-                 Zahl=detail.Zahl,
-                 ID=detail.ID
-
+                BonID = detail.Bon.ID,
+                Datum = detail.Bon.Datum,
+                Ermäßigung = detail.Ermäßigung,
+                KundeVorname = detail.Bon.Kunde.Vorname,
+                KundeNachname = detail.Bon.Kunde.Nachname,
+                Preis = detail.Preis,
+                ProduktID = detail.Produkt.ID,
+                ProduktTitel = detail.Produkt.Titel,
+                Zahl = detail.Zahl,
+                ID = detail.ID,
+                Produktarts = proRep.GetproduktartSelectList(),
+                Produkts = proRep.GetProdukts()
             };
             if (detailDetail == null)
             {
@@ -176,14 +213,22 @@ namespace EinzelhandelCoreMVC.Controllers
                 return NotFound();
             }
 
-            var detail = await _context.Detail
+            var detail = await _context.Detail.Include(x => x.Bon)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (detail == null)
             {
                 return NotFound();
             }
-
-            return View(detail);
+            DetailDetail dd = new DetailDetail()
+            {
+                BonID = detail.Bon.ID,
+                ID = detail.ID,
+                Zahl = detail.Zahl,
+                Datum = detail.Bon.Datum,
+                Ermäßigung = detail.Ermäßigung,
+                Preis = detail.Preis
+            };
+            return View(dd);
         }
 
         // POST: Details/Delete/5

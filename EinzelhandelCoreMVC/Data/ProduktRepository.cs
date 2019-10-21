@@ -36,6 +36,33 @@ namespace EinzelhandelCoreMVC.Data
                 return new SelectList(produktart, "Value", "Text");           
         }
 
+        public IEnumerable<SelectListItem> GetProdukts()
+        {
+            List<SelectListItem> produkts = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Value = null,
+                    Text = " "
+                }
+            };
+            return produkts;
+        }
+
+        public IEnumerable<SelectListItem> GetProdukts(int id)
+        {
+            IEnumerable<SelectListItem> regions = _context.Produkt.AsNoTracking()
+                .OrderBy(n => n.Titel)
+                .Where(n => n.Produktart.ID == id)
+                .Select(n =>
+                   new SelectListItem
+                   {
+                       Value = n.ID.ToString(),
+                       Text = n.Titel
+                   }).ToList();
+            return new SelectList(regions, "Value", "Text");
+        }
+
         internal List<ProduktDetail> GetProduktList()
         {
             List<Produkt> produkts = new List<Produkt>();
@@ -65,6 +92,20 @@ namespace EinzelhandelCoreMVC.Data
         {
             var produkt = _context.Produkt.Find(pid);
             return produkt.Produktart.ID;
+        }
+
+        internal void AddCount(Produkt produkt, int zahl)
+        {
+            produkt.Zahl += zahl;
+            _context.Update(produkt);
+            _context.SaveChanges();
+        }
+
+        internal void MinusCount(Produkt produkt, int zahl)
+        {
+            produkt.Zahl -= zahl;
+            _context.Update(produkt);
+            _context.SaveChanges();
         }
     }
 }
