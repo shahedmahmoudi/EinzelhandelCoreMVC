@@ -48,10 +48,14 @@ namespace EinzelhandelCoreMVC.Data
         internal List<DetailDetail> GetBonDetailList(int? ID)
         {
             List<Detail> Detaila = new List<Detail>();
+
             Detaila = _context.Detail.AsNoTracking()
-                .Include(x=>x.Produkt)
-                .Include(x=>x.Bon).Include(x=>x.Bon.Kunde)
+                .Include(x => x.Produkt)
+                .Include(x => x.Produkt.Produktart)
+                .Include(x => x.Bon)
+                .Include(x => x.Bon.Kunde)
                 .Where(x => x.Bon.ID == ID).ToList();
+
             if (Detaila.Count > 0)
             {
                 List<DetailDetail> DetailDetail = new List<DetailDetail>();
@@ -63,10 +67,12 @@ namespace EinzelhandelCoreMVC.Data
                         Ermäßigung = item.Ermäßigung,
                         Preis = item.Preis,
                         Zahl = item.Zahl,
-                       // BonNumber = item.Bon.ID,
+                        
                         Datum = item.Bon.Datum,
-                        KundeNachname = item.Bon.Kunde.Vorname,
-                        KundeVorname = item.Bon.Kunde.Nachname,
+                        KundeNachname = item.Bon.Kunde.Nachname,
+                        KundeVorname = item.Bon.Kunde.Vorname,
+                        ProduktTitel=item.Produkt.Titel,
+                        ProduktartTitel=item.Produkt.Produktart.Titel,
                         BonID = item.Bon.ID
                     };
                     DetailDetail.Add(DDetail);

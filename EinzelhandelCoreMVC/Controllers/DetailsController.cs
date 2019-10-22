@@ -135,6 +135,7 @@ namespace EinzelhandelCoreMVC.Controllers
             var detail = await _context.Detail.Include(x => x.Bon)
                 .Include(x => x.Bon.Kunde)
                 .Include(x => x.Produkt)
+                .Include(x=>x.Produkt.Produktart)
                 .FirstOrDefaultAsync(i => i.ID == id);
             var detailDetail = new DetailDetail()
             {
@@ -146,6 +147,8 @@ namespace EinzelhandelCoreMVC.Controllers
                 Preis = detail.Preis,
                 ProduktID = detail.Produkt.ID,
                 ProduktTitel = detail.Produkt.Titel,
+                ProduktartID=detail.Produkt.Produktart.ID,
+                ProduktartTitel=detail.Produkt.Produktart.Titel,
                 Zahl = detail.Zahl,
                 ID = detail.ID,
                 Produktarts = proRep.GetproduktartSelectList(),
@@ -176,18 +179,22 @@ namespace EinzelhandelCoreMVC.Controllers
                 {
                     Produkt p = _context.Produkt.Find(detail.ProduktID);
                     Bon b = _context.Bon.Find(detail.BonID);
-                    Detail Det = new Detail()
-                    {
-                        Bon = b,
-                        Preis = detail.Preis,
-                        Zahl = detail.Zahl,
-                        Produkt = p,
-                        Ermäßigung = detail.Ermäßigung,
-                        ID=detail.ID
+                    Detail Det = _context.Detail.Find(detail.ID);
+                    int oldZahl = Det.Zahl;
+                    int Unterschied = detail.Zahl - oldZahl;
 
-                    };
+                    Det.Bon = b;
+                    Det.Preis = detail.Preis;
+                    Det.Zahl = detail.Zahl;
+                    Det.Produkt = p;
+                    Det.Ermäßigung = detail.Ermäßigung;
+                   
                     _context.Update(Det);
                     await _context.SaveChangesAsync();
+
+                    ProduktartRepository proRep= new ProduktartRepository(_context);
+                    proRep.AddCount(p, Unterschied);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -236,11 +243,17 @@ namespace EinzelhandelCoreMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var detail = await _context.Detail.Include(x => x.Bon).FirstOrDefaultAsync(x => x.ID == id);
+            var detail = await _context.Detail
+                .Include(x => x.Bon)
+                .Include(x => x.Produkt)
+                .FirstOrDefaultAsync(x => x.ID == id);
              
            
             _context.Detail.Remove(detail);
             await _context.SaveChangesAsync();
+            ProduktartRepository proRep = new ProduktartRepository(_context);
+            Produkt produkt = _context.Produkt.Find(detail.Produkt.ID);
+            proRep.MinusCount(produkt, detail.Zahl);
             return RedirectToAction(nameof(Index), new { id = detail.Bon.ID });
         }
 

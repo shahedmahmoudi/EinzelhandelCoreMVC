@@ -17,7 +17,7 @@
             <div class="form-group">
                 @Html.LabelFor(x => Model.ProduktartID, htmlAttributes: new { @class = "control-label col-md-2" })
 
-                @Html.DropDownListFor(x => Model.ProduktartID, new SelectList(Model.Produktarts, "Value", "Text"), htmlAttributes: new { @class = "form-control", id = "ProduktartID" })
+                @Html.DropDownListFor(x => Model.ProduktartID, new SelectList(Model.Produktarts, "Value", "Text"), htmlAttributes: new { @class = "form-control", id = "ProduktartID", @OnSelectedIndexChanged = "FillCity()" })
                 @Html.ValidationMessageFor(x => x.ProduktartID, "", new { @class = "text-danger" })
 
             </div>
@@ -59,10 +59,26 @@
 
     <script type="text/javascript" src="~/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+
+        $(document).ready(function(){    
+            LoadArtProdukt();
+             
+           
+            setTimeout(function () { document.getElementById("ProduktID").value = "@Model.ProduktID";   }, 1000);
+             
+            
+           // alert(document.getElementById("ProduktID").value);
+       
+        });
+
         $('#ProduktartID').change(function () {
+            LoadArtProdukt();
+        });
+    </script>
+    <script>
+        function LoadArtProdukt() {
 
                 var selectedProduktart = $("#ProduktartID").val();
-
                 var produktsSelect = $('#ProduktID');
                 produktsSelect.empty();
             if (selectedProduktart != null && selectedProduktart != '') {
@@ -74,7 +90,7 @@
 
                             produktsSelect.append($('<option/>', {
                                 value: null,
-                                text: "entekhab kon"
+                                text: "Wählen Sie den Produkt"
                             }));
                             $.each(produkts, function (index, ProduktID) {
 
@@ -83,11 +99,10 @@
                                     text: ProduktID.text
                                 }));
                             });
+                                                         
                         };
-
-
                     });
                 }
-            });
+        }
     </script>
 }
